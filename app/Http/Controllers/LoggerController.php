@@ -2,37 +2,39 @@
 
 namespace App\Http\Controllers;
 
+use App\Components\Logger\FactoryMethod\EmailSender;
 use App\Components\Logger\FactoryMethod\LoggerFactory;
+use App\Components\Logger\FactoryMethod\SenderInterface;
 use App\Components\Logger\LoggerInterface;
 
 class LoggerController extends Controller
 {
     private LoggerInterface $logger;
-    private string $message;
+    private string $message = 'test log';
 
-    public function __construct(string $message)
+    public function __construct()
     {
-        $this->message = $message;
         $this->logger = LoggerFactory::createLogger(config('custom-logger.default'));
     }
 
     public function log(): void
     {
-        $this->logger->send($this->message);
+        $this->logger->logger->send($this->message);
+        $this->logger->setType('db');
+        $this->logger->logger->send($this->message);
     }
 
     public function logTo(string $type): void
     {
-        $logger = LoggerFactory::createLogger($type);
-        $logger->send($this->message);
+        $this->logger->sendByLogger($this->message, $type);
     }
 
     public function logToAll(): void
     {
-        $loggers = ['email', 'db', 'file'];
+        $loggers = config('custom-logger.all_loggers');
+
         foreach ($loggers as $type) {
-            $logger = LoggerFactory::createLogger($type);
-            $logger->send($this->message);
+            $this->logger->sendByLogger($this->message, $type);
         }
     }
 }

@@ -2,17 +2,25 @@
 
 namespace App\Components\Logger;
 
-abstract class AbstractLogger implements LoggerInterface
+use App\Components\Logger\FactoryMethod\LoggerFactory;
+
+class AbstractLogger implements LoggerInterface
 {
     protected string $type;
+    public LoggerInterface $logger;
 
-    abstract function send(string $message): void;
+    public function __construct(LoggerInterface $logger) {
+        $this->logger = $logger;
+    }
+
+//    abstract function send(string $message): void;
+    public function send(string $message): void {
+        static::send($message);
+    }
 
     public function sendByLogger(string $message, string $loggerType): void
     {
-        if ($this->getType() === $loggerType) {
-            $this->send($message);
-        }
+        LoggerFactory::createLogger($loggerType)->send($message);
     }
 
     public function getType(): string
@@ -23,5 +31,6 @@ abstract class AbstractLogger implements LoggerInterface
     public function setType(string $type): void
     {
         $this->type = $type;
+        $this->logger = LoggerFactory::createLogger($type);
     }
 }
