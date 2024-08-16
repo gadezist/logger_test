@@ -4,18 +4,18 @@ namespace App\Components\Logger;
 
 use App\Components\Logger\FactoryMethod\LoggerFactory;
 
-class AbstractLogger implements LoggerInterface
+abstract class AbstractLogger implements LoggerInterface
 {
     protected string $type;
-    public LoggerInterface $logger;
+    public ?LoggerInterface $logger = null;
 
-    public function __construct(LoggerInterface $logger) {
-        $this->logger = $logger;
+    public function __construct() {
+            $this->logger = $this;
     }
 
-//    abstract function send(string $message): void;
+    abstract public function sendCurrent(string $message): void;
     public function send(string $message): void {
-        static::send($message);
+        $this->logger->sendCurrent($message);
     }
 
     public function sendByLogger(string $message, string $loggerType): void

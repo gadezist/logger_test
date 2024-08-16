@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Components\Logger\FactoryMethod\EmailSender;
 use App\Components\Logger\FactoryMethod\LoggerFactory;
-use App\Components\Logger\FactoryMethod\SenderInterface;
 use App\Components\Logger\LoggerInterface;
 
 class LoggerController extends Controller
@@ -19,9 +17,9 @@ class LoggerController extends Controller
 
     public function log(): void
     {
-        $this->logger->logger->send($this->message);
-        $this->logger->setType('db');
-        $this->logger->logger->send($this->message);
+        $this->logger->send($this->message);
+        $this->logger->setType('email');
+        $this->logger->send($this->message);
     }
 
     public function logTo(string $type): void

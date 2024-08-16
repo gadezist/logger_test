@@ -17,10 +17,5 @@ abstract class AbstractSender implements SenderInterface
 
     }
 
-    public function sendByLogger(string $message, string $loggerType): void
-    {
-
-    }
-
     abstract function createLogger(): LoggerInterface;
 }

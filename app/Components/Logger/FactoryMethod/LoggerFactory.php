@@ -12,17 +12,10 @@ class LoggerFactory
 {
     public static function createLogger(string $type): LoggerInterface
     {
-//        return match ($type) {
-//            'email' => new EmailLogger(),
-//            'db' => new DbLogger(),
-//            'file' => new FileLogger(),
-//            default => throw new \Exception("Logger type {$type} not supported."),
-//        };
-
         return match ($type) {
-            'email' => new AbstractLogger(new EmailLogger()),
-            'db' => new AbstractLogger(new DbLogger()),
-            'file' => new AbstractLogger(new FileLogger()),
+            'email' => new EmailLogger(),
+            'db' => new DbLogger(),
+            'file' => new FileLogger(),
             default => throw new \Exception("Logger type {$type} not supported."),
         };
     }
